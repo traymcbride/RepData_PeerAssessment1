@@ -22,13 +22,10 @@ library(dplyr)
 
 ```r
 library(ggplot2)
+
 if(!file.exists("activity.csv"))
 {
-  temp <- tempfile()
-  fileurl <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
-  download.file(fileurl,temp,method="curl")
-  unzip(temp)
-  unlink(temp)
+    unzip("activity.zip")
 }
 
 ActivityData <- read.csv("activity.csv")
