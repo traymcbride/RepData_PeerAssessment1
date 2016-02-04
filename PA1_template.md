@@ -237,7 +237,7 @@ cat("The new median of total steps:",median(StepTotalNew$TotalSteps),"\n")
 ```
 
 
-With imputing the missing steps by using the mean for each time interval, the mean and median for the total number of steps have both increased and are now equal.
+By imputing the missing steps using the mean for each time interval, the mean and median for the total number of steps have both increased and are now equal.
 
 Let's look at StepTotal and StepTotalNew for those dates where TotalSteps increased.
 
