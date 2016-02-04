@@ -280,8 +280,8 @@ knitr::kable(StepTotalRowsNew)
 |2012-11-14 |   10766.19|
 |2012-11-30 |   10766.19|
 
-As we can see, the imputing values using the mean for each interval, days
-with previous totals of 0 were all increased to the same large value, thus the increase
+As we can see, by imputing values using the mean for each interval, days
+with previous totals of 0 all increased to the same value, thus the increase
 in our mean and median values for total steps.
 
 ## Are there differences in activity patterns between weekdays and weekends?
