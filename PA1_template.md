@@ -1,14 +1,26 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: yes
----
+# Reproducible Research: Peer Assessment 1
 
 ## Loading and preprocessing the data
 
-```{r, echo=TRUE}
+
+```r
 library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+## 
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 library(ggplot2)
 if(!file.exists("activity.csv"))
 {
@@ -22,12 +34,45 @@ if(!file.exists("activity.csv"))
 ActivityData <- read.csv("activity.csv")
 ```
 
-```{r,echo=TRUE}
-str(ActivityData)
-summary(ActivityData$steps)
-summary(ActivityData$interval)
-dim(ActivityData)
 
+```r
+str(ActivityData)
+```
+
+```
+## 'data.frame':	17568 obs. of  3 variables:
+##  $ steps   : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ date    : Factor w/ 61 levels "2012-10-01","2012-10-02",..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
+```
+
+```r
+summary(ActivityData$steps)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##    0.00    0.00    0.00   37.38   12.00  806.00    2304
+```
+
+```r
+summary(ActivityData$interval)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##     0.0   588.8  1178.0  1178.0  1766.0  2355.0
+```
+
+```r
+dim(ActivityData)
+```
+
+```
+## [1] 17568     3
+```
+
+```r
 #Make date an actual date instead of a character string.
 ActivityData <- mutate(ActivityData,date = as.Date(date))
 ```
@@ -38,58 +83,91 @@ appear to be measured in military time.
 ## What is mean total number of steps taken per day?
 
 
-```{r, echo=TRUE}
+
+```r
 StepTotal <- select(ActivityData,-(interval)) %>%
              group_by(date) %>%
              summarize(TotalSteps=sum(steps,na.rm=TRUE))
 ```
 
 
-```{r, echo=TRUE}
+
+```r
 with(StepTotal,barplot(TotalSteps,col="royalblue",names.arg = date, 
                        xlab = "Date",ylab="Total Steps",
                        axis.lty = 1,xpd=FALSE, cex.lab=1.25)) 
 title(main="10/1/2012 through 11/30/2012",cex.main=1.5)
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
 
-```{r,echo=TRUE}
+
+
+```r
 cat("The mean of total steps:",mean(StepTotal$TotalSteps),"\n")
+```
+
+```
+## The mean of total steps: 9354.23
+```
+
+```r
 cat("The median of total steps:",median(StepTotal$TotalSteps),"\n")
+```
+
+```
+## The median of total steps: 10395
 ```
 
 ## What is the average daily activity pattern?
 
-```{r,echo=TRUE}
+
+```r
 AverageSteps <- select(ActivityData,-(date)) %>%
                 group_by(interval) %>%
                 summarize(steps=mean(steps,na.rm=TRUE))
 ```
 
 
-```{r,echo=TRUE}
+
+```r
 with(AverageSteps,plot(interval,steps,type="l",xlab="Time Interval",
                        ylab = "Average Steps",cex.lab=1.25))
 title(main="10/1/2012 through 11/30/2012",cex.main=1.5)
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
 
-```{r,echo=TRUE}
+
+
+```r
 MaxSteps <- filter(AverageSteps, steps == max(steps))
 cat("The interval with the maximum average steps:",as.integer(MaxSteps[1,1]),"\n")
 ```
 
+```
+## The interval with the maximum average steps: 835
+```
+
 ## Imputing missing values
 
-```{r,echo=TRUE}
+
+```r
 table(is.na(ActivityData))
+```
+
+```
+## 
+## FALSE  TRUE 
+## 50400  2304
 ```
 
 There are 2304 NA values in the dataset.  Our analysis during preprocessing showed they are all for the steps column.
 
 We use the mean for each interval to impute the missing values.
 
-```{r,echo=TRUE}
+
+```r
 #First, let's split the data into those rows with NA and those with valid data
 
 splitup <- is.na(ActivityData$steps)
@@ -98,8 +176,21 @@ ActivityDataNA <- ActivityData[splitup,]
 ActivityDataGood <- ActivityData[!splitup,]
 
 dim(ActivityDataNA)
-dim(ActivityDataGood)
+```
 
+```
+## [1] 2304    3
+```
+
+```r
+dim(ActivityDataGood)
+```
+
+```
+## [1] 15264     3
+```
+
+```r
 #Now let's fill in the missing values for ActivityDataNA.  Let's drop the steps
 #column in ActivityDataNA since they're all NA.
 
@@ -112,14 +203,25 @@ ActivityDataImpute <- merge(ActivityDataImpute,AverageSteps,by.x="interval",
                       select(steps,date,interval)
 
 dim(ActivityDataImpute)
+```
 
+```
+## [1] 2304    3
+```
+
+```r
 ActivityDataNew <- rbind(ActivityDataGood,ActivityDataImpute)
 
 dim(ActivityDataNew)
 ```
 
+```
+## [1] 17568     3
+```
 
-```{r,echo=TRUE}
+
+
+```r
 StepTotalNew <- select(ActivityDataNew,-(interval)) %>%
                 group_by(date) %>%
                 summarize(TotalSteps=sum(steps))
@@ -128,9 +230,24 @@ with(StepTotalNew,barplot(TotalSteps,col="green",names.arg = date,
                           xlab = "Date",ylab="Total Steps",
                           axis.lty = 1,xpd=FALSE, cex.lab=1.25)) 
 title(main="10/1/2012 through 11/30/2012: Imputed Missing Steps",cex.main=1.5)
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-11-1.png) 
+
+```r
 cat("The new mean of total steps:",mean(StepTotalNew$TotalSteps),"\n")
+```
+
+```
+## The new mean of total steps: 10766.19
+```
+
+```r
 cat("The new median of total steps:",median(StepTotalNew$TotalSteps),"\n")
+```
+
+```
+## The new median of total steps: 10766.19
 ```
 
 
@@ -138,15 +255,44 @@ With imputing the missing steps by using the mean for each time interval, the me
 
 Let's look at StepTotal and StepTotalNew for those dates where TotalSteps increased.
 
-```{r,echo=TRUE,results='asis'}
 
+```r
 StepIncrease <- StepTotalNew$TotalSteps > StepTotal$TotalSteps
 StepTotalRows <- StepTotal[StepIncrease,]
 StepTotalRowsNew <- StepTotalNew[StepIncrease,]
 
 knitr::kable(StepTotalRows)
+```
+
+
+
+date          TotalSteps
+-----------  -----------
+2012-10-01             0
+2012-10-08             0
+2012-11-01             0
+2012-11-04             0
+2012-11-09             0
+2012-11-10             0
+2012-11-14             0
+2012-11-30             0
+
+```r
 knitr::kable(StepTotalRowsNew)
 ```
+
+
+
+date          TotalSteps
+-----------  -----------
+2012-10-01      10766.19
+2012-10-08      10766.19
+2012-11-01      10766.19
+2012-11-04      10766.19
+2012-11-09      10766.19
+2012-11-10      10766.19
+2012-11-14      10766.19
+2012-11-30      10766.19
 
 As we can see, the imputing values using the mean for each interval, days
 with previous totals of 0 were all increased to the same large value, thus the increase
@@ -154,7 +300,8 @@ in our mean and median values for total steps.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r,echo=TRUE}
+
+```r
 #Let's classify the dates by first getting the day of the week for each
 #and then classifying those days of week into two buckets as a factor.
 
@@ -166,7 +313,21 @@ ActivityDataNew <- mutate(ActivityDataNew, DayOfWeek = weekdays(date)) %>%
 #Let's check our data.
 
 table(ActivityDataNew$DayOfWeek,ActivityDataNew$DayClass)
+```
 
+```
+##            
+##             Weekday Weekend
+##   Friday       2592       0
+##   Monday       2592       0
+##   Saturday        0    2304
+##   Sunday          0    2304
+##   Thursday     2592       0
+##   Tuesday      2592       0
+##   Wednesday    2592       0
+```
+
+```r
 #Now let's get the average steps for our data with imputed missing values.
 
 AverageStepsNew <- select(ActivityDataNew,-c(date,DayOfWeek)) %>%
@@ -174,7 +335,8 @@ AverageStepsNew <- select(ActivityDataNew,-c(date,DayOfWeek)) %>%
                    summarize(steps=mean(steps,na.rm=TRUE))
 ```
 
-```{r,echo=TRUE}
+
+```r
 #Now we'll plot time series for weekdays versus weekends.
 
 g <- ggplot(data=AverageStepsNew, aes(interval, steps)) +
@@ -193,6 +355,8 @@ g <- ggplot(data=AverageStepsNew, aes(interval, steps)) +
 
 print(g)
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-14-1.png) 
 
 Weekends appear to be more active on average during the afternoons, while weekdays show more activity than weekends during the morning hours.
 
