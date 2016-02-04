@@ -1,26 +1,15 @@
-# Reproducible Research: Peer Assessment 1
+---
+title: "Reproducible Research: Peer Assessment 1"
+output: 
+  html_document:
+    keep_md: yes
+---
 
 ## Loading and preprocessing the data
 
 
 ```r
 library(dplyr)
-```
-
-```
-## 
-## Attaching package: 'dplyr'
-## 
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-## 
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
-
-```r
 library(ggplot2)
 
 if(!file.exists("activity.csv"))
@@ -96,7 +85,7 @@ with(StepTotal,barplot(TotalSteps,col="royalblue",names.arg = date,
 title(main="10/1/2012 through 11/30/2012",cex.main=1.5)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
 
 
 
@@ -133,7 +122,7 @@ with(AverageSteps,plot(interval,steps,type="l",xlab="Time Interval",
 title(main="10/1/2012 through 11/30/2012",cex.main=1.5)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
 
 
 
@@ -229,7 +218,7 @@ with(StepTotalNew,barplot(TotalSteps,col="green",names.arg = date,
 title(main="10/1/2012 through 11/30/2012: Imputed Missing Steps",cex.main=1.5)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-11-1.png) 
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11-1.png) 
 
 ```r
 cat("The new mean of total steps:",mean(StepTotalNew$TotalSteps),"\n")
@@ -263,16 +252,16 @@ knitr::kable(StepTotalRows)
 
 
 
-date          TotalSteps
------------  -----------
-2012-10-01             0
-2012-10-08             0
-2012-11-01             0
-2012-11-04             0
-2012-11-09             0
-2012-11-10             0
-2012-11-14             0
-2012-11-30             0
+|date       | TotalSteps|
+|:----------|----------:|
+|2012-10-01 |          0|
+|2012-10-08 |          0|
+|2012-11-01 |          0|
+|2012-11-04 |          0|
+|2012-11-09 |          0|
+|2012-11-10 |          0|
+|2012-11-14 |          0|
+|2012-11-30 |          0|
 
 ```r
 knitr::kable(StepTotalRowsNew)
@@ -280,16 +269,16 @@ knitr::kable(StepTotalRowsNew)
 
 
 
-date          TotalSteps
------------  -----------
-2012-10-01      10766.19
-2012-10-08      10766.19
-2012-11-01      10766.19
-2012-11-04      10766.19
-2012-11-09      10766.19
-2012-11-10      10766.19
-2012-11-14      10766.19
-2012-11-30      10766.19
+|date       | TotalSteps|
+|:----------|----------:|
+|2012-10-01 |   10766.19|
+|2012-10-08 |   10766.19|
+|2012-11-01 |   10766.19|
+|2012-11-04 |   10766.19|
+|2012-11-09 |   10766.19|
+|2012-11-10 |   10766.19|
+|2012-11-14 |   10766.19|
+|2012-11-30 |   10766.19|
 
 As we can see, the imputing values using the mean for each interval, days
 with previous totals of 0 were all increased to the same large value, thus the increase
@@ -353,7 +342,7 @@ g <- ggplot(data=AverageStepsNew, aes(interval, steps)) +
 print(g)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-14-1.png) 
+![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14-1.png) 
 
 Weekends appear to be more active on average during the afternoons, while weekdays show more activity than weekends during the morning hours.
 
